@@ -1,0 +1,68 @@
+*{
+  font-family: Arial;
+}
+
+p{
+  font-size: 18px;
+}
+
+#search_form{
+}
+
+.form_title{
+}
+
+.input_h{
+    clear: both;
+
+}
+
+.input_h *{
+    float:left;
+    margin: 15px;
+
+
+}
+
+.large_input{
+    height: 200px;
+    width: 400px;
+    max-width: 800px;
+    resize: horizontal;
+}
+
+.site_header{
+  background-color: #e6e6e6;
+  font-size: 20px;
+  clear: none;
+  vertical-align: center;
+  max-height: 70px;
+}
+
+.site_header a, h1{
+ font-family: Arial;
+ margin: 0px 20px;
+}
+
+.site_header a{
+  font-size: 20px;
+  color: #2d2d2d !important;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.site_header li{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.site_header .header_form li{
+  background-color: #fff;
+}
+
+.site_header li form input{
+  font-size: 20px;
+  color: #000;
+  vertical-align: middle;
+  margin-top: 20px;
+}
