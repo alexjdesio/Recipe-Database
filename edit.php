@@ -5,8 +5,6 @@
 <?php include('header.php'); ?>
 
 <?php
-
-require_once('init.php');
 if(is_post_request()){
   $recipe_name = $_POST['recipe_name'] ?? ' ';
   $recipe_tags = $_POST['recipe_tags'] ?? ' ';
@@ -20,7 +18,7 @@ if(is_post_request()){
   echo "Name: " . $recipe_name . "<br />";
   echo "Tags: " . $recipe_tags . "<br />";
 
-  echo "Cook Time: ";
+  echo "Cook Time: " . "<br />";
   if ($recipe_hours != 0) {
       echo $recipe_hours;
       if ($recipe_hours == 1) echo " hour ";
@@ -37,13 +35,13 @@ if(is_post_request()){
 }
 
 else{
-  redirect('new.php');
+  //redirect('new.php');
 }
 ?>
 <body>
 <h2 class="form_title">Edit Recipe</h2>
 <div id="search_form">
-    <form action="/recipe_database/new_recipe.php" method="post">
+    <form action="" method="post">
         <p>Recipe Name</p>
         <input type="text" name="recipe_name" value="" />
         <p>Tags</p>
@@ -60,16 +58,6 @@ else{
         <input class="large_input" type="text" name="recipe_ingredients" value="" />
         <p>Directions</p>
         <input class="large_input" type="text" name="recipe_directions" value="" />
-
-        <div class="input_h">
-            <p>Check box</p>
-            <input type="checkbox" name="checkbox" value="0" />
-        </div>
-        <br>
-        <div class="input_h">
-            <p>Search</p>
-            <input type="search" name="search" value="Enter Here" />
-        </div>
         <br>
         <div class="input_h">
             <p>Submit</p>

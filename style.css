@@ -66,3 +66,17 @@ p{
   vertical-align: middle;
   margin-top: 20px;
 }
+
+
+.table_header td{
+  font-size: 24px;
+  width: 190px;
+  outline: 1px solid black;
+  text-align: center;
+}
+.home_table_row{
+  outline: 1px solid black;
+  font-size: 18px;
+  width: 190px;
+  text-align: center;
+}

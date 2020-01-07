@@ -16,11 +16,10 @@
         <br>
         <div class="input_h">
             <p>Search</p>
-            <input type="search" name="search" value="Enter Here" />
+            <input type="search" name="search" value="" placeholder="Find a Recipe" />
         </div>
         <br>
-        <div class="input_h">
-            <p>Submit</p>
+        <div style="margin-left: 100px;" class="input_h">
             <input type="submit" name="submit_form"value="Submit" />
         </div>
         <br>

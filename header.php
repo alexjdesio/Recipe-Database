@@ -1,3 +1,5 @@
+<?php include('init.php'); ?>
+
 <a style="font-size: 14px; color: #2d2d2d; margin: 0 !important;" href="https://github.com/alexjdesio">Github</a>
 
 <div class="site_header">

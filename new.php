@@ -7,6 +7,19 @@
 <?php include('header.php'); ?>
 
 
+<?php
+
+if(is_get_request()){
+  //display form
+}
+else if (is_post_request()){
+  //redisplay form with error messages if an error occurs
+}
+
+
+ ?>
+
+
 <h2 class="form_title">Add Recipe</h2>
 <div id="search_form">
       <form action="" method="post">
@@ -26,12 +39,6 @@
         <input class="large_input" type="text" name="recipe_ingredients" value="" />
         <p>Directions</p>
         <input class="large_input" type="text" name="recipe_directions" value="" />
-
-        <div class="input_h">
-            <p>Check box</p>
-            <input type="checkbox" name="checkbox" value="0" />
-        </div>
-        <br>
         <div class="input_h">
             <p>Submit</p>
             <input type="submit" name="submit_form"value="Create Recipe" />
