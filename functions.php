@@ -20,4 +20,18 @@ function is_post_request() {
 function is_get_request() {
   return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
+
+function h($text){
+  return htmlspecialchars($text);
+}
+
+function connect_to_db(){
+  $host = 'localhost';
+  $user = 'webuser';
+  $password = 'password';
+  $database = 'recipes';
+  $db = mysqli_connect($host,$user,$password,$database);
+  return $db;
+}
+
 ?>

@@ -9,55 +9,35 @@
 
   <h2>Newest Recipes</h2>
   <table style="margin: 0 auto;">
-    <?php
-    //loop as long as there are more elements to display:
-    $table_output = "
-    <tr class=\"table_header\">
+    <tr class="table_header">
       <td>Recipe </td>
       <td>Tags </td>
       <td>Serves </td>
       <td>Date Added</td>
     </tr>
-    ";
-
-    echo $table_output;
-    ?>
     <?php
-    //while there are more elements to display:
-    //create parts of the html string and combine them together to form a complete row
-    //echo the row and repeat the process with new elements
-    $host = 'localhost';
-    $user = 'webuser';
-    $password = 'password';
-    $database = 'recipes';
-    $sql_connection = mysqli_connect($host,$user,$password,$database);
+    //need to fix the url portion to link to a get request to view.php once view.php is created
+    //additionally, redo the table so that there is an id as well or the date works or other hidden values
+    $db = connect_to_db();
 
-    $query = 'SELECT * FROM subjects ';
-    $query .= 'ORDER BY date ASC';
-    $content = mysqli_query($sql_connection,$query);
+    $query = 'SELECT * FROM recipe_table ';
+    $query .= 'ORDER BY date ASC;';
+    $content = mysqli_query($db,$query);
+    ?>
 
-    $recipe_count = mysqli_num_rows($content);
-
-    for($i = 0; $i < $recipe_count; $i++){
-      $curr_row = $mysqli_fetch_assoc($content);
-
-      $recipe_name = $curr_row['recipe']; //get from sql database
-      $recipe_tags = $curr_row['tags']; //get from sql database
-      $recipe_servings = $curr_row['servings']; // get from sql database
-      $recipe_date = $curr_row['date'];
+     <?php while($curr_row = mysqli_fetch_assoc($content)){ ?>
+     <tr class="home_table_row">
+       <td><a href="<?php echo h($curr_row['recipe'])?>.php"><?php echo h($curr_row['recipe'])?></a></td>
+       <td><?php echo h($curr_row['tags']) ?></td>
+       <td><?php echo h($curr_row['servings'])?></td>
+       <td><?php echo h($curr_row['date'])?></td>
+     </tr>
+     <?php } ?>
 
 
-      //This area can be redone for readability
-      $recipe_name_cell = '<td><a href=' . '"' . $recipe_name . '.php">' . $recipe_name . '</a></td>';
-      $recipe_tags_cell = '<td>' . $recipe_tags . '</td>';
-      $recipe_servings_cell = '<td>' . $recipe_servings . '</td>';
-      $recipe_date_cell = '<td>' . $recipe_date . '</td>';
-
-      echo "<tr class=\"home_table_row\">" . $recipe_name_cell . $recipe_tags_cell . $recipe_servings_cell . $recipe_date_cell . "</tr>";
-    }
-
-    mysqli_free_result($content);
-    mysqli_close($sql_connection);
-     ?>
   </table>
+  <?php
+  mysqli_free_result($content);
+  mysqli_close($db);
+  ?>
 </div>

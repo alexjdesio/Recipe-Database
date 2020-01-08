@@ -9,11 +9,16 @@
 
 <?php
 
-if(is_get_request()){
-  //display form
-}
-else if (is_post_request()){
-  //redisplay form with error messages if an error occurs
+if (is_post_request()){
+  $curr_date = date('m/d/y');
+
+  $db = connect_to_db();
+  $query = 'INSERT into recipe_table ';
+  $query .= "VALUES ('" . $_POST['recipe_name']. "','" . $_POST['recipe_tags'] . "','" . $_POST['recipe_servings'] . "','" . $curr_date;
+  $query .= "');";
+  echo $query;
+  mysqli_query($db,$query);
+
 }
 
 
@@ -24,24 +29,17 @@ else if (is_post_request()){
 <div id="search_form">
       <form action="" method="post">
         <p>Recipe Name</p>
-        <input type="text" name="recipe_name" value="" />
+        <input type="text" name="recipe_name" value="" >
         <p>Tags</p>
-        <input type="text" name="recipe_tags" value="" />
-        <h3>Cook Time</h3>
-        <p>Hours</p>
-        <input type="number" name="recipe_hours" value="" min="0" max="168" />
-        <br>
-        <p>Minutes</p>
-        <input type="number" name="recipe_minutes" value="" min="0" max="60" />
+        <input type="text" name="recipe_tags" value="" >
         <p>Servings</p>
-        <input type="number" name="recipe_servings" value="" min="1" max="72"/>
+        <input type="number" name="recipe_servings" min="1" max="72" value="">
         <p>Ingredients</p>
-        <input class="large_input" type="text" name="recipe_ingredients" value="" />
+        <input class="large_input" type="text" name="recipe_ingredients" value="" >
         <p>Directions</p>
-        <input class="large_input" type="text" name="recipe_directions" value="" />
+        <input class="large_input" type="text" name="recipe_directions" value="" >
         <div class="input_h">
-            <p>Submit</p>
-            <input type="submit" name="submit_form"value="Create Recipe" />
+        <input style="margin-left: 120px;" type="submit" name="submit_form"value="Create Recipe" >
         </div>
         <br>
     </form>

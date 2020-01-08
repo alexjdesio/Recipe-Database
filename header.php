@@ -6,7 +6,7 @@
 <ul>
   <li><a href="home.php"> Recipe Database </a></li>
   <li class="header_form">
-    <form action="" method="get">
+    <form action="search.php" method="get">
       <input type="search" name="search" value="" placeholder="Find a recipe"/>
     </form>
   </li>
