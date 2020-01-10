@@ -6,6 +6,9 @@ p{
   font-size: 18px;
 }
 
+body{
+  margin: 0 15%;
+}
 
 .form_title{
 }
@@ -35,7 +38,7 @@ p{
   max-height: 70px;
 }
 
-.site_header a, h1{
+.site_header a{
  font-family: Arial;
  margin: 0px 20px;
 }
@@ -77,15 +80,42 @@ p{
   text-align: center;
 }
 
-.viewrecipe li{
-  margin: 18px;
-  font-size: 18px;
+.viewrecipe {
+  padding-left: 1.0em;
+  margin: 0;
 }
 
-.viewrecipe{
+.viewrecipe li{
   list-style-type: none;
+  display: inline;
+  font-size: 14px;
+  padding-right: 20px;
+  margin: 0;
 }
 
 .spacer{
   clear:both;
+}
+
+.ingredients{
+  font-size: 1em;
+  line-height: 28px;
+}
+
+.directions{
+ font-size: 1.1em;
+ line-height: 30px;
+}
+
+#two_column{
+  display: flex;
+  flex-direction: row;
+}
+
+#left_column{
+  float:left;
+}
+
+#right_column{
+  float:right:
 }

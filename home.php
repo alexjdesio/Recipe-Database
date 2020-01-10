@@ -4,7 +4,7 @@
 </head>
 
 <?php include('header.php'); ?>
-
+<body>
 <div style="text-align: center;">
   <h1>Recipe Database</h1>
 
@@ -42,3 +42,5 @@
   mysqli_close($db);
   ?>
 </div>
+
+</body>
