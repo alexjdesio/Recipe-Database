@@ -47,8 +47,9 @@ $recipe_information = mysqli_fetch_assoc($content);
 </head>
 <body>
 
-<h1><?php echo urldecode($_GET['recipe'])?></h1>
-<div id="two_column">
+<h1 style="margin-bottom: 10px;"><?php echo urldecode($_GET['recipe'])?></h1>
+<a style="margin-left: 10px; font-size: 12px;" href=<?php echo "edit.php?recipe=" . urlencode($_GET['recipe']); ?>>Edit Recipe</a>
+<div style="padding-top: 20px;" id="two_column">
   <div id="right_column">
     <ul class="viewrecipe">
       <li>Added on: <?php echo $recipe_information['date']?></li>
@@ -67,7 +68,7 @@ $recipe_information = mysqli_fetch_assoc($content);
   </div>
 
   <div id="right_column">
-    <image style="margin-left: 160px; margin-top: 30px;" src="<?php echo urldecode($recipe_information['image_name'])?>">
+    <image style="margin-left: 160px; margin-top: 30px;" width="500px" height="300px" src="<?php echo urldecode($recipe_information['image_name'])?>">
   </div>
 
 </div>
@@ -85,7 +86,7 @@ $recipe_information = mysqli_fetch_assoc($content);
 </ol>
 
 
-<a style="color:red;" href="view.php?recipe=<?php echo urldecode($_GET['recipe'])?>&delete=true">Delete Recipe</a>
+<a style="color:red;" href="view.php?recipe=<?php echo urlencode($_GET['recipe'])?>&delete=true">Delete Recipe</a>
   <?php
   mysqli_free_result($content);
   mysqli_close($db);

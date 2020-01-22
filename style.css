@@ -117,5 +117,6 @@ body{
 }
 
 #right_column{
-  float:right:
+  float:right;
+  width: 400px;
 }
