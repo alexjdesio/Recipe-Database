@@ -5,6 +5,13 @@
 
 <?php include('header.php'); ?>
 <body>
+<?php
+if(isset($_GET['deleted'])){ //Notifies user if recipe was successfully deleted
+  if($_GET['deleted']=='successful'){
+    echo "Recipe deleted succesfully";
+  }
+}
+ ?>
 <div style="text-align: center;">
   <h1>Recipe Database</h1>
 
@@ -17,10 +24,9 @@
       <td>Date Added</td>
     </tr>
     <?php
-    //need to fix the url portion to link to a get request to view.php once view.php is created
-    //additionally, redo the table so that there is an id as well or the date works or other hidden values
     $db = connect_to_db();
 
+    //Retrieves all entries in the table ordered by date
     $query = 'SELECT * FROM recipe_table ';
     $query .= 'ORDER BY date ASC;';
     $content = mysqli_query($db,$query);

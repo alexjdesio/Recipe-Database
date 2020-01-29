@@ -2,36 +2,44 @@
 
 <?php
 if(!isset($_GET['recipe'])){
- redirect('home.php');
+ redirect('home.php'); //Redirects the user to home.php if there is no recipe in the url query string
 }
 else if (isset($_GET['delete'])){
-  if($_GET['delete']=="true"){
-    //remove temp file from the /images directory
+  if($_GET['delete']=="true"){ //Removes the recipe entry from the database
+    $db = connect_to_db();
     $query = 'SELECT * FROM recipe_table ';
     $query .= "WHERE " . 'recipe' ."='";
     $query .= urlencode($_GET['recipe']) . "'";
     echo $query;
     $content = mysqli_query($db,$query);
     $recipe_information = mysqli_fetch_assoc($content);
-    unlink(urldecode($recipe_information['image_name']));
 
-    //remove entry from database
-    $db = connect_to_db();
-    $query = 'DELETE from recipe_table ';
-    $query .= "WHERE " . 'recipe' ."='";
-    $query .= urlencode($_GET['recipe']) . "'";
-    echo $query;
-    mysqli_query($db,$query);
-    redirect("home.php");
-    //Add some kind of confirmation message if the delete is successful
-
-
+    //Deletes image from images directory
+    if(!unlink(urldecode($recipe_information['image_name']))){
+      echo "Image could not be deleted";
+    }
+    else{
+      //Removes entry from database if the image was deleted
+      $db = connect_to_db();
+      $query = 'DELETE from recipe_table ';
+      $query .= "WHERE " . 'recipe' ."='";
+      $query .= urlencode($_GET['recipe']) . "'";
+      echo $query;
+      if(mysqli_query($db,$query)){
+        redirect("home.php?deleted=successful");
+      }
+      else{
+        echo "Recipe could not be deleted.<br>";
+      }
+    }
+    //TODO:Add confirmation message if delete was successful
   }
 }
 
 ?>
 
 <?php
+//Retrieves entry from database for a given recipe name
 $db = connect_to_db();
 $query = 'SELECT * FROM recipe_table ';
 $query .= "WHERE " . 'recipe' ."='";

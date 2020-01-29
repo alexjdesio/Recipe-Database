@@ -6,6 +6,7 @@
 <?php include('header.php'); ?>
 
 <?php
+//Retrieves existing information from the database for the given recipe name
 $db = connect_to_db();
 $query = 'SELECT * FROM recipe_table ';
 $query .= "WHERE " . 'recipe' ."='";
@@ -14,32 +15,51 @@ echo $query;
 $content = mysqli_query($db,$query);
 $recipe_information = mysqli_fetch_assoc($content);
 
-if(is_get_request()){ // for a get request, display the form with the values in the database
-  if(!isset($_GET['recipe'])){ //checks to make sure there is a recipe to edit with the given name
+if(is_get_request()){ // For a get request, display the form with the values in the database
+  if(!isset($_GET['recipe'])){ //Checks to make sure the url query string contains a variable for the recipe name
    redirect('new.php');
   }
-  if(urldecode($recipe_information['recipe']) != $_GET['recipe']){ //if there is already a recipe with the intended name
+  if(urldecode($recipe_information['recipe']) != $_GET['recipe']){ //If there are no entries in the database with the given recipe name, redirect to new.php
     redirect('new.php');
   }
 }
-if (is_post_request()){ // for a post request, update the database and redirect to the updated view.php entry
+if (is_post_request()){ // For a post request, update the database entry for the recipe and redirect to the updated view.php entry
   $db = connect_to_db();
 
-  $file_types = ['image/png','image/bmp','image/gif','image/jpeg','image/jpg','image/png'];
+  //TODO: Check the mime type of the image before accepting it
+  $accepted_extensions = ['png','bmp','gif','jpg','jpeg'];
+  $accepted_mime_types = ['image/png','image/bmp','image/gif','image/jpeg','image/jpg','image/png'];
   $image_directory = "images/";
   $target_image = $image_directory . basename($_FILES['image_file']['tmp_name']);
+  $file_type = $_FILES['image_file']['type'];
+  $file_extension = file_extension(basename($_FILES['image_file']['name']));
   $upload = 1;
   $file_moved = 0;
 
-  if(file_exists($target_image)){
+  if(file_exists($target_image)){ //Makes sure that the file does not already exist
     $upload = 0;
-    echo "File already exists";
+    echo "File already exists<br>";
   }
-  if($_FILES['image_file']['size']>65000){
+  elseif($_FILES['image_file']['size']>65000){ //Makes sure that the file is an appropriate size
     $upload = 0;
-    echo "File is too large";
+    echo "File is too large<br>";
   }
-  //validate that the file is an image
+  elseif(!in_array($file_type,$accepted_mime_types)){ //Makes sure that the file is an acceptable MIME TYPE
+    $upload = 0;
+    echo "File is not a valid image type<br>";
+  }
+  elseif(!in_array($file_extension,$accepted_extensions)){ //Makes sure that the file has an acceptable extension
+    $upload = 0;
+    echo "File does not have a valid image extension<br>";
+  }
+  elseif(!getimagesize($_FILES['image_file']['tmp_name'])){ //Checks to make sure that the file is an image by requesting the dimensions of the image
+    $upload = 0;
+    echo "File is not an image<br>";
+  }
+  elseif(contains_php($_FILES['image_file']['tmp_name'])){
+    $upload = 0;
+    echo "File should not contain php<br>";
+  }
 
   if($upload == 1){
     if(move_uploaded_file($_FILES['image_file']['tmp_name'],$target_image)){
@@ -48,6 +68,7 @@ if (is_post_request()){ // for a post request, update the database and redirect 
     }
   }
 
+  //Updates the existing entry in the database with the new information provided by the form
   $query = 'UPDATE recipe_table ';
   $query .= "SET ";
   $query .= "recipe='" . urlencode(h($_POST['recipe_name'])) . "',";
@@ -56,7 +77,7 @@ if (is_post_request()){ // for a post request, update the database and redirect 
   $query .= "date='" . date('m/d/y') . "',";
   $query .= "ingredients='" . h(urlencode($_POST['recipe_ingredients'])) . "',";
   $query .= "directions='" . h(urlencode($_POST['recipe_directions'])) . "',";
-  if($upload == 1){ //if the image was successfully updated,
+  if($upload == 1){ //if the image was successfully updated, replace the image name in the database
     $query .= "image_name='" . urlencode($target_image) . "'";
   }
   else{
@@ -66,12 +87,19 @@ if (is_post_request()){ // for a post request, update the database and redirect 
   $query .= $recipe_information['recipe'] ."';";
 
   echo $query;
-  if(mysqli_query($db,$query)){
+  if(mysqli_query($db,$query)){ //Redirects to the view.php entry for the given recipe if the recipe was updated successfully
     $new_page = "view.php?recipe=" . urlencode($_POST['recipe_name']);
-    redirect($new_page);
+    //If recipe entry was updated successfully, remove the old image from the images directory
+    if(!unlink(urldecode($recipe_information['image_name']))){
+      echo "Image could not be deleted<br>";
+    }
+    else{
+      redirect($new_page);
+    }
+
   }
   else{
-    echo "<p>One or more errors prevented the recipe from being updated.</p>";
+    echo "One or more errors prevented the recipe from being updated.<br>";
   }
 
 }

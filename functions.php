@@ -34,4 +34,18 @@ function connect_to_db(){
   return $db;
 }
 
+//Returns the file extension
+function file_extension($file){
+  $file_pathinfo = pathinfo($file);
+  return $file_pathinfo['extension'];
+}
+
+//Checks if file contains php code
+function contains_php($file) {
+	$file_contents = file_get_contents($file);
+	$position = strpos($contents, '<?php');
+  return $position !== false;
+}
+
+
 ?>

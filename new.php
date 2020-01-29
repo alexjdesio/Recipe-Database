@@ -10,39 +10,51 @@
 
 <?php
 if (is_post_request()){
+  //Queries database to make sure that submission has a unique recipe name
   $db = connect_to_db();
-  //check if there is already a recipe with the same name
   $query = 'SELECT * FROM recipe_table ';
   $query .= "WHERE " . 'recipe' ."='";
   $query .= urlencode($_POST['recipe_name']) . "'";
   echo $query . "<br>";
   $content = mysqli_query($db,$query);
   $recipe_information = mysqli_fetch_assoc($content);
-  if($recipe_information['recipe'] == urlencode($_POST['recipe_name'])){ //if there is already a recipe with the intended name
+  if($recipe_information['recipe'] == urlencode($_POST['recipe_name'])){ //Checks if there is already a recipe with the same name
     echo "There is already a recipe with this name<br>";
   }
   else{
-    /* image processing steps:
-       -check mime type
-       -upload it
-       -figure out how to position it so that we can get its directory as well
-       -display it on view.php
-    */
-    $file_types = ['image/png','image/bmp','image/gif','image/jpeg','image/jpg','image/png'];
+    $accepted_extensions = ['png','bmp','gif','jpg','jpeg'];
+    $accepted_mime_types = ['image/png','image/bmp','image/gif','image/jpeg','image/jpg','image/png'];
     $image_directory = "images/";
     $target_image = $image_directory . basename($_FILES['image_file']['tmp_name']);
+    $file_type = $_FILES['image_file']['type'];
+    $file_extension = file_extension(basename($_FILES['image_file']['name']));
     $upload = 1;
     $file_moved = 0;
 
-    if(file_exists($target_image)){
+    if(file_exists($target_image)){ //Makes sure that the file does not already exist
       $upload = 0;
-      echo "File already exists";
+      echo "File already exists<br>";
     }
-    if($_FILES['image_file']['size']>65000){
+    elseif($_FILES['image_file']['size']>65000){ //Makes sure that the file is an appropriate size
       $upload = 0;
-      echo "File is too large";
+      echo "File is too large<br>";
     }
-    //validate that the file is an image
+    elseif(!in_array($file_type,$accepted_mime_types)){ //Makes sure that the file is an acceptable MIME TYPE
+      $upload = 0;
+      echo "File is not a valid image type<br>";
+    }
+    elseif(!in_array($file_extension,$accepted_extensions)){ //Makes sure that the file has an acceptable extension
+      $upload = 0;
+      echo "File does not have a valid image extension<br>";
+    }
+    elseif(!getimagesize($_FILES['image_file']['tmp_name'])){ //Checks to make sure that the file is an image by requesting the dimensions of the image
+      $upload = 0;
+      echo "File is not an image<br>";
+    }
+    elseif(contains_php($_FILES['image_file']['tmp_name'])){
+      $upload = 0;
+      echo "File should not contain php<br>";
+    }
 
     if($upload == 1){
       if(move_uploaded_file($_FILES['image_file']['tmp_name'],$target_image)){
@@ -52,23 +64,22 @@ if (is_post_request()){
     }
 
 
-    //uploading relevant information to the database
+    //Query adds entry to the database if successful
+    //User input is processed to prevent SQL injection as well as issues with url query strings before being stored in the database
     $query = 'INSERT into recipe_table ';
     $query .= "VALUES ('";
     $query .= urlencode(h($_POST['recipe_name'])) . "','";
     $query .= urlencode(h($_POST['recipe_tags'])) . "','";
     $query .= $_POST['recipe_servings'] . "','";
     $query .= date('m/d/y') . "','";
-    //$list_ingredients = str_replace('\n','%0A',$_POST['recipe_ingredients']) ?? $_POST['recipe_ingredients'];
     $query .= h(urlencode($_POST['recipe_ingredients'])) . "','";
-    //$query .= h(urlencode($list_ingredients)) . "','";
     $query .= h(urlencode($_POST['recipe_directions'])) . "','";
     $query .= urlencode($target_image);
     $query .= "');";
 
-    if($file_moved == 1){ //if the image has been successfully added to the images directory
+    if($file_moved == 1){
       echo $query;
-      if(mysqli_query($db,$query)){
+      if(mysqli_query($db,$query)){ //Redirects the user to the view.php page for the new recipe if it was successfully added.
         $new_page = "view.php?recipe=" . urlencode($_POST['recipe_name']);
         redirect($new_page);
       }
@@ -78,8 +89,6 @@ if (is_post_request()){
     }
   }
 }
-
-
 ?>
 
 <h2 class="form_title">Add Recipe</h2>

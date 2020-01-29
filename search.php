@@ -8,15 +8,12 @@
 <?php include('header.php'); ?>
 
 <?php
-if(isset($_GET['search'])){ //if there are any values to search by
-//pull values from $_GET superglobal
-//query database for any recipes matching the description
-//show recipes in a list form
-//include button to search again
+if(isset($_GET['search'])){ //Checks the url query string for a value to search by
+
 $db = connect_to_db();
+$search_type = $_GET['search_type'] ?? 'recipe'; //Search type is optional, assumed to be recipe name if not provided in the url query string
 
-$search_type = $_GET['search_type'] ?? 'recipe';
-
+//Queries database for all entries matching the search parameters
 $query = 'SELECT * FROM recipe_table ';
 $query .= "WHERE " . $search_type ."='";
 $query .= urlencode($_GET['search']) . "'";
@@ -37,6 +34,7 @@ $content = mysqli_query($db,$query);
     <td>Date Added</td>
   </tr>
 
+   <?php //Displays all entries matching search parameters in table form ?>
    <?php while($curr_row = mysqli_fetch_assoc($content)){ ?>
    <tr class="home_table_row">
      <td><a href="view.php?recipe=<?php echo h($curr_row['recipe'])?>"><?php echo urldecode(h($curr_row['recipe']))?></a></td>
@@ -54,7 +52,7 @@ mysqli_close($db);
 ?>
 
 <?php
-}
+} //Displays the search form if the get request did not contain a value to search by
 else{
   echo '
   <h2 class="form_title">Find Recipe</h2>
